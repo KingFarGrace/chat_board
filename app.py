@@ -1,11 +1,13 @@
+#!/usr/bin/python3
+# -*- encoding: utf-8 -*-
+
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
 from config import dbconfig
+from exts import db
 
 app = Flask(__name__)
 app.config.from_object(dbconfig)
-db = SQLAlchemy(app)
-db.create_all()
+db.init_app(app)
 
 @app.route('/')
 def index():
