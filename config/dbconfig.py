@@ -2,13 +2,14 @@
 
 DIALECT = 'mysql'
 DRIVER = 'mysqldb'
-USERNAME = 'root'
-PASSWORD = 'Root%132546'
+# 配置自己的用户名和密码
+USERNAME = ''
+PASSWORD = ''
 HOST = 'localhost'
 PORT = '3306'
 DATABASE = 'chat_board_sys'
 
-SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf-8".format(DIALECT, 
+SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format( DIALECT, 
                                                                         DRIVER, 
                                                                         USERNAME, 
                                                                         PASSWORD, 
