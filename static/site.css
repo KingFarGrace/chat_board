@@ -1,0 +1,28 @@
+#title {
+    background-color: cornflowerblue;
+    text-align: left;
+    font-weight: bold;
+    padding: 10px;
+}
+
+#guide {
+    background-color: #e9eef3;
+    text-align: center;
+    font-size: 20px;
+    padding: 0px;
+    padding-top: 10px;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+#friend {
+    background-color: antiquewhite;
+    text-align: center;
+    min-height: 500px;
+}
+
+#indexText {
+    background-color:aliceblue;
+    text-align: center;
+    min-height: 500px;
+}
