@@ -1,6 +1,3 @@
-# !/usr/bin/python3
-# -*- encoding: utf-8 -*-
-
 DIALECT = 'mysql'
 DRIVER = 'mysqldb'
 # 配置自己的用户名和密码
