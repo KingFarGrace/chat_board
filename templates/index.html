@@ -1,32 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="index" content="width=device-width, initial-scale=1.0">
-    <title>主页</title>
+{% extends 'base.html' %}
 
-    <link rel="stylesheet" href="static/site.css" type="text/css">
-    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+{% block title %}主页{% endblock %}
 
-    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</head>
-<body>
-    <h1 id='title'>多用户留言板系统</h1>
-    <div class="row" id="guide">
-        <div class="col-md-1 col-lg-1"><a href="{{ url_for('router.index') }}"> 主页 </a></div>
-        <div class="col-md-1 col-lg-1"><a href="{{ url_for('router.myPage') }}"> 个人中心 </a></div>
-        <div class="col-md-1 col-lg-1"><p> 消息中心 </p></div>
-        <div class="col-md-7 col-lg-7"></div>
-        <div class="col-md-1 col-lg-1"><a href="{{ url_for('router.register') }}"> 注册 </a></div>
-        <div class="col-md-1 col-lg-1"><a href="{{ url_for('router.login') }}"> 登录 </a></div>
-    </div>
-    <div class="row">
-        <div class="col-md-3 col-lg-3" id='friend'><h1>关注管理的地方</h1></div>
-        <div class="col-md-9 col-lg-9" id='indexText'><h1>搜索+浏览留言</h1></div>
-    </div>
-</body>
-</html>
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}" />
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3 col-lg-3" id='friend'><h1>关注管理的地方</h1></div>
+    <div class="col-md-9 col-lg-9" id='indexText'><h1>搜索+浏览留言</h1></div>
+</div>
+{% endblock %}
