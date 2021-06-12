@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="myPage" content="width=device-width, initial-scale=1.0">
-    <title>个人页面</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}用户登录{% endblock %}
+{% block body %}
     <h1>查看及修改个人信息</h1><br>
     <h1>查看及删除已发留言</h1><br>
     <h1>收藏留言</h1><br>
     <h1>草稿箱</h1><br>
     <h1>用户注销</h1>
-</body>
-</html>
+{% endblock %}

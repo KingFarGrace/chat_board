@@ -6,10 +6,12 @@ from config import dbconfig
 from exts import db
 from views.router import router
 from models import user
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 app.register_blueprint(router)
 app.config.from_object(dbconfig)
+bootstrap = Bootstrap(app)
 db.init_app(app)
 
 with app.app_context():
