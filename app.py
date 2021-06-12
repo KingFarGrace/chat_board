@@ -1,35 +1,19 @@
+#!/usr/bin/python3
+# -*- encoding: utf-8 -*-
+
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
 from config import dbconfig
+from exts import db
+from views.router import router
+from models import user
 
 app = Flask(__name__)
+app.register_blueprint(router)
 app.config.from_object(dbconfig)
-db = SQLAlchemy(app)
-db.create_all()
+db.init_app(app)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-@app.route('/signUp')
-def signUp():
-    return render_template('signUp.html')
-
-@app.route('/myPage')
-def myPage():
-    return render_template('myPage.html')
-
-@app.route('/textEdit')
-def textEdit():
-    return render_template('textEdit.html')
-
-@app.route('/textView')
-def textView():
-    return render_template('textView.html')
+with app.app_context():
+    db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)
