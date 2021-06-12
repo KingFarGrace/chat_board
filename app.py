@@ -9,9 +9,9 @@ from models import user
 from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
+bootstrap = Bootstrap(app)
 app.register_blueprint(router)
 app.config.from_object(dbconfig)
-bootstrap = Bootstrap(app)
 db.init_app(app)
 
 with app.app_context():
