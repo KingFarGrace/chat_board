@@ -1,6 +1,3 @@
-#!/usr/bin/python3
-# -*- encoding: utf-8 -*-
-
 from flask import Flask, render_template
 from config import dbconfig
 from exts import db
