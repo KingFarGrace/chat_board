@@ -1,12 +1,9 @@
-#!/usr/bin/env python3
-# -*- encoding: utf-8 -*-
-
 from flask import Blueprint, render_template
 
 router = Blueprint('router', __name__)
 
-#用于测试练习的页面 随便怎么搞
-@router.route('/test/')
+#用于测试练习的页面 随便怎么搞都行
+@router.route('/test')
 def test():
     return render_template('test.html')
 
