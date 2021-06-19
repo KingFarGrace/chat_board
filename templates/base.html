@@ -3,13 +3,22 @@
 
 {% block title %}主页{% endblock %}
 
-<<<<<<< HEAD
-{# 导航条 #}
-=======
->>>>>>> 23e129f0cae414fa9c7596d4a3887b22dd6612d6
 {% block navbar %}
 <nav class="navbar navbar-inverse" style="border-radius: 0px;">
     <div class="container">
+        <div class="navbar-header">
+            <button type="button" 
+                    class="navbar-toggle collapsed" 
+                    data-toggle="collapse"
+                    data-target=".navbar-collapse" 
+                    aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">博客</a>
+        </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li><a href="{{ url_for('router.index') }}">主页</a></li>
