@@ -6,10 +6,10 @@ from models import user
 from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
-bootstrap = Bootstrap(app)
 app.register_blueprint(router)
 app.config.from_object(dbconfig)
 db.init_app(app)
+bootstrap = Bootstrap(app)
 
 with app.app_context():
     db.create_all()
