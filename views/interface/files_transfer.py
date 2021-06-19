@@ -20,4 +20,5 @@ def upload(file):
 
 
 def download(filename):
-    return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
+    if request.method == 'GET':
+        return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
