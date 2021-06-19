@@ -16,7 +16,7 @@ def upload(file):
         if file and allowed_file(file.filename):
             filename = file.filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            url_for('download',filename=filename)
+            url_for('download', filename=filename)
 
 
 def download(filename):
