@@ -20,7 +20,7 @@ class TestAccountDAO:
         self.select_test_result = accountDAO.select_user_by_name('test')
 
     def test_register(self):
-        assert accountDAO.register('test', '123456') == False
+        assert accountDAO.register('test', '123456') is False
 
     def test_login_by_username(self):
         assert accountDAO.login_by_username('best', '123456') == -1
@@ -39,5 +39,5 @@ class TestAccountDAO:
         assert accountDAO.select_user_by_uid(1) == self.select_test_result
 
     def test_update_username(self):
-        assert accountDAO.update_username(1, 'test') == True
-        assert accountDAO.update_username(0, 'test') == False
+        assert accountDAO.update_username(1, 'test') is True
+        assert accountDAO.update_username(0, 'test') is False
