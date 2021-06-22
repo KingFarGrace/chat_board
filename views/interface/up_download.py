@@ -18,13 +18,11 @@ def upload(file):
             # return redirect(url_for('get_url'))
     # return render_template('')
 
-
 # @app.route('/get_url')
 # def get_url():
 #     files = user.Pdf_files.query.filter_by(uid=,time=).first()
 #     filename = files.filename
 #     return filename
-
 
 # @app.route('/download/<filename>')
 def download(filename):
