@@ -12,3 +12,4 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(255), nullable=False)
     signature = db.Column(db.String(255), nullable=False)
+    icon_url = db.Column(db.String(255), nullable=False)
