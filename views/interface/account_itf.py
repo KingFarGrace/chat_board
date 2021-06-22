@@ -37,8 +37,8 @@ def change_figure():
     pass
 
 
-def change_username(uid, new_name):
-    if accountDAO.select_user_by_name(new_name) is not None:
+def change_username(uid, old_name, new_name):
+    if accountDAO.select_user_by_name(new_name) is not None and new_name != old_name:
         return 'replicated username, please change and try again'
     else:
         if accountDAO.update_username(uid, new_name) is True:
@@ -59,10 +59,10 @@ def change_pwd(uid, old_pwd, new_pwd):
 
 
 def update_info(uid, **kwargs):
-    if accountDAO.update_gender(uid, kwargs['gender']) or \
+    if (accountDAO.update_gender(uid, kwargs['gender']) or \
         accountDAO.update_age(uid, kwargs['age']) or \
-            accountDAO.update_email(uid, kwargs['email']) or \
-                accountDAO.update_signature(uid, kwargs['signature']) is False:
+        accountDAO.update_email(uid, kwargs['email']) or \
+        accountDAO.update_signature(uid, kwargs['signature'])) is False:
         return 'failed to identify, please check your accout and try again.'
     else:
         return 'success to update info.'

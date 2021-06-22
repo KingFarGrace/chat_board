@@ -41,3 +41,7 @@ class TestAccountDAO:
     def test_update_username(self):
         assert accountDAO.update_username(1, 'test') is True
         assert accountDAO.update_username(0, 'test') is False
+
+    def test_update_gender(self):
+        assert accountDAO.update_gender(1, '空') is True
+        assert accountDAO.update_gender(0, '空') is False
