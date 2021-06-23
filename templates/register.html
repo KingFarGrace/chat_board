@@ -1,2 +1,32 @@
 {% extends 'base.html' %}
 {% block title %}用户注册{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}" />
+{% endblock %}
+
+{% block content %}
+<form name="register">
+    <table id="registerTable" align="center">
+        <tr>
+            <td><label>用户名:</label></td>
+            <td><input id="inputText" type="text" name="username" placeholder="请输入用户名"></td>
+        </tr>
+        <tr>
+            <td><label>密码:</label></td>
+            <td><input id="inputText" type="password" name="password" placeholder="请输入密码"></td>
+        </tr>
+        <tr>
+            <td><label>确认密码:</label></td>
+            <td><input id="inputText" type="password" name="ckpassword" placeholder="请再次输入密码"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="button" value="注册">
+                <input type="button" value="重置">
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}
