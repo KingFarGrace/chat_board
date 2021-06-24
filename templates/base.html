@@ -17,17 +17,19 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">留言板</a>
+            <a class="navbar-brand" href="{{ url_for('router.index') }}">漏洞系统</a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('router.index') }}">主页</a></li>
-                <li><a href="{{ url_for('router.myPage') }}">个人中心</a></li>
-                <li><a href="#">消息中心</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ url_for('router.register') }}">注册</a></li>
-                <li><a href="{{ url_for('router.login') }}">登录</a></li>
+                <li><a href="{{ url_for('router.xss') }}">XSS</a></li>
+                <li><a href="{{ url_for('router.csrf') }}">CSRF</a></li>
+                <li><a href="{{ url_for('router.httpHeader') }}">HTTPheader注入</a></li>
+                <li><a href="{{ url_for('router.contentTraverse') }}">目标遍历</a></li>
+                <li><a href="{{ url_for('router.sqlPush') }}">SQL注入</a></li>
+                <li><a href="{{ url_for('router.fileDownload') }}">文件下载</a></li>
+                <li><a href="{{ url_for('router.fileUpload') }}">文件上传</a></li>
+                <li><a href="{{ url_for('router.diaryLoss') }}">日志不全</a></li>
+                <li><a href="{{ url_for('router.penetration') }}">渗透测试安全</a></li>
             </ul>
         </div>
     </div>
