@@ -1,12 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from views.interface import account_itf
+from exts import app
 
 router = Blueprint('router', __name__)
 
-#用于测试练习的页面 随便怎么搞都行
+
+# 用于测试练习的页面 随便怎么搞都行
 @router.route('/test')
 def test():
+    app.logger.info('get test page')
     return render_template('test.html')
+
 
 @router.route('/')
 def index():
@@ -34,13 +38,16 @@ def index():
 
 @router.route('/xss/', methods=['POST','GET'])
 def xss():
+    app.logger.info('get xss page')
     # 发送POST请求更改内容
     if request.method == 'POST':
         return render_template('xss.html', searchContent = request.form.get('searchContent'))
     return render_template('xss.html')
 
+
 @router.route('/csrf/', methods=['POST','GET'])
 def csrf():
+    app.logger.info('get csrf page')
     # 登录
     if request.method == 'POST':
         user = account_itf.login('username', request.form.get('username'), request.form.get('password'))
@@ -49,30 +56,44 @@ def csrf():
         return render_template('csrf.html', user = user)
     return render_template('csrf.html')
 
+
 @router.route('/httpHeader/')
 def httpHeader():
+    app.logger.info('get httpHeader page')
     return render_template('httpHeader.html')
+
 
 @router.route('/contentTraverse/')
 def contentTraverse():
+    app.logger.info('get contentTraverse page')
     return render_template('contentTraverse.html')
+
 
 @router.route('/sqlPush/')
 def sqlPush():
+    app.logger.info('get sqlPush page')
     return render_template('sqlPush.html')
+
 
 @router.route('/fileDownload/')
 def fileDownload():
+    app.logger.info('get fileDownload page')
     return render_template('fileDownload.html')
+
 
 @router.route('/fileUpload/')
 def fileUpload():
+    app.logger.info('get fileUpload page')
     return render_template('fileUpload.html')
+
 
 @router.route('/diaryLoss/')
 def diaryLoss():
+    app.logger.info('get diaryLoss page')
     return render_template('diaryLoss.html')
+
 
 @router.route('/penetration/')
 def penetration():
+    app.logger.info('get penetration page')
     return render_template('penetration.html')
