@@ -4,8 +4,24 @@
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}" />
+    <script src="{{url_for('static', filename='xss.js')}}"></script>
 {% endblock %}
 
 {% block content %}
+<!-- 正确写法，用{}传参数的方法即可避免 -->
+<!-- <form id="xss" method="POST">
+    <input type="text" placeholder="输入搜索的内容" name="searchContent">
+    <input type="submit" value="搜索">
+    <div>搜索的内容：{{ searchContent }}</div>
+</form> -->
 
+<!-- 漏洞出现，用js直接改文件的标签属性 -->
+<!-- 搜索框输入
+    <a href="https://www.baidu.com">百度</a> 
+    使标签属性多出超链接连接到外网-->
+<div id="xss">
+    <input type="text" placeholder="输入搜索的内容" id="searchContent">
+    <button onclick="xssClick(searchContent.value)">搜索</button>
+    <div id="result"></div>
+</div>
 {% endblock %}

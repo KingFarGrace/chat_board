@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for
+from views.interface import account_itf
 
 router = Blueprint('router', __name__)
 
@@ -31,12 +32,21 @@ def index():
 # def textView():
 #     return render_template('textView.html')
 
-@router.route('/xss/')
+@router.route('/xss/', methods=['POST','GET'])
 def xss():
+    # 发送POST请求更改内容
+    if request.method == 'POST':
+        return render_template('xss.html', searchContent = request.form.get('searchContent'))
     return render_template('xss.html')
 
-@router.route('/csrf/')
+@router.route('/csrf/', methods=['POST','GET'])
 def csrf():
+    # 登录
+    if request.method == 'POST':
+        user = account_itf.login('username', request.form.get('username'), request.form.get('password'))
+        # if user['msg'] == 'succesfully login!':
+        #     return render_template('csrf.html', user = user )
+        return render_template('csrf.html', user = user)
     return render_template('csrf.html')
 
 @router.route('/httpHeader/')
