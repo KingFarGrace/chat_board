@@ -1,13 +1,14 @@
-from flask import Flask, render_template
-from config import dbconfig
-from exts import db
+from config import dbconfig, pdfconfilg
+# 注释掉该行import语句，即可关闭日志功能
+# from config import logconfig
+from exts import db, app
 from views.router import router
 from models import user
 from flask_bootstrap import Bootstrap
 
-app = Flask(__name__)
 app.register_blueprint(router)
 app.config.from_object(dbconfig)
+app.config.from_object(pdfconfilg)
 db.init_app(app)
 bootstrap = Bootstrap(app)
 
@@ -15,4 +16,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5100)
