@@ -36,24 +36,33 @@ def index():
 # def textView():
 #     return render_template('textView.html')
 
-@router.route('/xss/', methods=['POST','GET'])
+
+@router.route('/xss/', methods=['POST', 'GET'])
 def xss():
     app.logger.info('get xss page')
     # 发送POST请求更改内容
     if request.method == 'POST':
-        return render_template('xss.html', searchContent = request.form.get('searchContent'))
+        search_content = request.form.get('searchContent')
+        app.logger.warning('form value:{}'.format(search_content))
+        return render_template('xss.html', searchContent=search_content)
     return render_template('xss.html')
 
 
-@router.route('/csrf/', methods=['POST','GET'])
+@router.route('/csrf/', methods=['POST', 'GET'])
 def csrf():
     app.logger.info('get csrf page')
     # 登录
     if request.method == 'POST':
+        # # Here is an advise to revise
+        # login_method = request.form.get('method')
+        # username = request.form.get('username')
+        # password = request.form.get('password')
+        # app.logger.warning('{} request login by {}'.format(username, login_method))
+        # user = account_itf.login(login_method, username, password)
         user = account_itf.login('username', request.form.get('username'), request.form.get('password'))
-        # if user['msg'] == 'succesfully login!':
+        # if user['msg'] == 'successfully login!':
         #     return render_template('csrf.html', user = user )
-        return render_template('csrf.html', user = user)
+        return render_template('csrf.html', user=user)
     return render_template('csrf.html')
 
 
