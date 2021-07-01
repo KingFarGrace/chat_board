@@ -7,14 +7,16 @@
 {% endblock %}
 
 {% block content %}
-<form id="loginTable" method="POST">
-    <input type="text" placeholder="输入用户名" name="username">
-    <input type="password" placeholder="输入密码" name="password">
-    <input type="submit" value="登录">
-</form>
+{% if user == None %}
+    <form id="loginTable" method="POST">
+        <input type="text" placeholder="输入用户名" name="username">
+        <input type="password" placeholder="输入密码" name="password">
+        <input type="submit" value="登录">
+    </form>
+{% else %}
 <div id='csrf'>
-    <div>{{ user['msg'] }}</div>
-    <div>{{ user['info'].signature}}</div>
+        <div>{{ user['msg'] }}</div>
+        <div>{{ user['info'].signature}}</div>
 </div>
-
+{% endif %}
 {% endblock %}

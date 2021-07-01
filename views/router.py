@@ -63,7 +63,7 @@ def csrf():
         # if user['msg'] == 'successfully login!':
         #     return render_template('csrf.html', user = user )
         return render_template('csrf.html', user=user)
-    return render_template('csrf.html')
+    return render_template('csrf.html', user=None)
 
 
 @router.route('/httpHeader/')
