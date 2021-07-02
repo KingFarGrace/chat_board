@@ -33,12 +33,6 @@
     background-color:aliceblue;
     box-shadow: 10px 10px 30px #777777;
     font-size: 18px;
-}
-
-#loginTable td, #registerTable td{
-    font-family: Verdana;
-    font-size: 18px;
-    width: 150px;
     padding: 15px;
     text-align: center;
 }

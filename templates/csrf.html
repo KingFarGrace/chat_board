@@ -7,16 +7,22 @@
 {% endblock %}
 
 {% block content %}
-{% if user == None %}
-    <form id="loginTable" method="POST">
-        <input type="text" placeholder="输入用户名" name="username">
-        <input type="password" placeholder="输入密码" name="password">
-        <input type="submit" value="登录">
+{% if user != None %}
+<div id='csrf'>
+    <div>已登录：{{ user['username'] }}</div>
+    <div>余额：{{ user['money'] }}</div>
+    <form id="csrf" method="POST">
+        <!-- 删除csrf_token句即可关闭 -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="text" placeholder="输入转账用户" name="touser">
+        <input type="text" placeholder="输入转账金额" name="money">
+        <input type="submit" value="确认">
     </form>
+    <a href="../static/csrf_hack.html">csrf漏洞</a>
+</div>
 {% else %}
 <div id='csrf'>
-        <div>{{ user['msg'] }}</div>
-        <div>{{ user['info'].signature}}</div>
+    <div>未登录！</div>
 </div>
 {% endif %}
 {% endblock %}
