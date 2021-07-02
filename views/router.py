@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from logging import info
+from flask import Blueprint, render_template, request, redirect, url_for, make_response
 from views.interface import account_itf
+from utils.dbutils import accountDAO
 from exts import app
 
 router = Blueprint('router', __name__)
@@ -12,9 +14,24 @@ def test():
     return render_template('test.html')
 
 
-@router.route('/')
+@router.route('/', methods=['POST', 'GET'])
 def index():
-    return render_template('index.html')
+    cookie = request.cookies.get("username")
+    if request.method == 'POST':
+        # 登录
+        # login_method = request.form.get('method')
+        login_method = 'username'
+        username = request.form.get('username')
+        password = request.form.get('password')
+        app.logger.warning('{} request login by {}'.format(username, login_method))
+        user = account_itf.login(login_method, username, password)
+        if user['msg'] == 'successfully login!':
+            # 设置cookie
+            resp = make_response(render_template('index.html', username=username))
+            resp.set_cookie("username", username)
+            return resp
+        return render_template('index.html', username=None)
+    return render_template('index.html', username=cookie)
 
 # @router.route('/login/')
 # def login():
@@ -51,19 +68,20 @@ def xss():
 @router.route('/csrf/', methods=['POST', 'GET'])
 def csrf():
     app.logger.info('get csrf page')
-    # 登录
+    cookie = request.cookies.get("username")
+    user = None
+    if cookie != None:
+        user = accountDAO.select_user_by_name(cookie)
+    # POST转账请求
     if request.method == 'POST':
-        # # Here is an advise to revise
-        # login_method = request.form.get('method')
-        # username = request.form.get('username')
-        # password = request.form.get('password')
-        # app.logger.warning('{} request login by {}'.format(username, login_method))
-        # user = account_itf.login(login_method, username, password)
-        user = account_itf.login('username', request.form.get('username'), request.form.get('password'))
-        # if user['msg'] == 'successfully login!':
-        #     return render_template('csrf.html', user = user )
-        return render_template('csrf.html', user=user)
-    return render_template('csrf.html')
+        touser = request.form.get('touser')
+        money = request.form.get('money')
+        user = accountDAO.select_user_by_name(cookie)
+        uid = user.uid
+        new_money = user.money - int(money)
+        print(account_itf.updata_money(uid, new_money=new_money))
+        return '{}转账{}元到{}成功！'.format(cookie ,money, touser)
+    return render_template('csrf.html', user=user)
 
 
 @router.route('/httpHeader/')

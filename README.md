@@ -18,13 +18,15 @@ a chat board system
 
 + 漏洞成因：用户输入或一些用户可控参数未经处理地输出到页面上
 + 漏洞实现：在xss页面的搜索框中输入“<a href="https://www.baidu.com">百度</a> ”，下方本应出现简单的文本内容变为超链接，诱导正常用户点击进入到其他网站
-+ 漏洞解决步骤：xss.html（待补充）
++ 漏洞解决步骤：更改 xss.html 中修改页面标签元素的方法，改为flask中的{{参数}}方法，会将搜索框中输入的内容不转义而全部显示
 
 
 
 ### 跨站点请求伪造（CSRF）
 
-
++ 漏洞成因：用户信任网站a并登录，浏览器存在cookie时打开恶意网站b，b伪造用户向a发送请求
++ 漏洞实现：先在index页面登录账号，再到csrf页面下，点击“csrf漏洞”，转跳到 csrf_hack 页面，依靠浏览器已保存的cookie发送转账请求（项目处于csrf保护状态）
++ 漏洞产生步骤：注释掉app.py中的CsrfProtect(app)，并把index.html和csrf.html中的csrf_token语句删除即可（html中的语句仅注释会报错）
 
 
 

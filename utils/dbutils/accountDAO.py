@@ -115,6 +115,14 @@ def update_figure(uid, new_url):
     else:
         return False    
 
+def update_money(uid, new_money):
+    result = user.User.query.filter(user.User.uid == uid).first()
+    if result is not None:
+        result.money = new_money
+        db.session.commit()
+        return True
+    else:
+        return False    
 
 def remove_user(uid):
     result = user.User.query.filter(user.User.uid == uid).first()
