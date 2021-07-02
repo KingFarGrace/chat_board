@@ -7,5 +7,9 @@
 {% endblock %}
 
 {% block content %}
-
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="file" name="pdf" accept="application/pdf">
+    <input type="submit" value="提交">
+</form>
 {% endblock %}

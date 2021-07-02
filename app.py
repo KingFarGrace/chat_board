@@ -20,4 +20,4 @@ with app.app_context():
 if __name__ == '__main__':
     # csrf保护，所有表单前添加 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> 即可
     CsrfProtect(app)
-    app.run(debug=True, port=5100)
+    app.run(debug=True, port=4500)

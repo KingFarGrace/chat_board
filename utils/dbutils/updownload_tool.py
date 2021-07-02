@@ -1,4 +1,3 @@
-from views.interface.up_download import download
 from config import pdfconfilg
 
 # 判断是否是允许的文件后缀
