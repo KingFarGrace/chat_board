@@ -8,20 +8,33 @@
 {% endblock %}
 
 {% block content %}
-<!-- 正确写法，用{}传参数的方法即可避免 -->
-<!-- <form id="xss" method="POST">
-    <input type="text" placeholder="输入搜索的内容" name="searchContent">
-    <input type="submit" value="搜索">
-    <div>搜索的内容：{{ searchContent }}</div>
-</form> -->
 
-<!-- 漏洞出现，用js直接改文件的标签属性 -->
-<!-- 搜索框输入
-    <a href="https://www.baidu.com">百度</a> 
-    使标签属性多出超链接连接到外网-->
-<div id="xss">
-    <input type="text" placeholder="输入搜索的内容" id="searchContent">
-    <button onclick="xssClick(searchContent.value)">搜索</button>
-    <div id="result"></div>
+{% if user != None %}
+<div class='csrf'>
+    <div>已登录：{{ user['username'] }}</div>
+    <!-- 正确写法，用{}传参数的方法即可避免 -->
+    <!-- <div>个性签名：{{ user['signature'] }}</div> -->
+
+    <!-- 漏洞出现，用js直接改文件的标签属性 -->
+    <!-- 输入框输入
+        <a href="https://www.baidu.com">百度</a> 
+        使标签属性多出超链接连接到外网-->
+    <body onload="load('{{ user.signature }}')"></body>
+    <div class="xss">
+        <div>个性签名：</div>
+        <div id="result"></div>
+    </div>
+
+    <!-- 发送表单 -->
+    <form class="csrf" method="POST">
+        <!-- 添加csrf_token句即可开启csrf保护 -->
+        <input type="text" placeholder="输入新个性签名" name="new_signature">
+        <input type="submit" value="确认">
+    </form>
 </div>
+{% else %}
+<div class='csrf'>
+    <div>未登录！</div>
+</div>
+{% endif %}
 {% endblock %}

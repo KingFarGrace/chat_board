@@ -9,15 +9,15 @@
 {% block content %}
 {% if username == None %}
 <form id="loginTable" method="POST">
-    <!-- 删除csrf_token句即可关闭 -->
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <!-- 添加csrf_token句即可开启csrf保护 -->
     <input type="text" placeholder="输入用户名" name="username">
     <input type="password" placeholder="输入密码" name="password">
     <input type="submit" value="登录">
 </form>
 {% else %}
-<div id='csrf'>
+<div id='loginTable'>
     <div>登录成功！{{ username }}</div>
+    <a href="{{ url_for('router.quit') }}">退出</a>
 </div>
 {% endif %}
 {% endblock %}
