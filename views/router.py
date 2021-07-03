@@ -7,6 +7,7 @@ from config import pdfconfilg
 from utils.dbutils import updownload_tool
 import os
 from exts import db
+from models import attachment
 
 router = Blueprint('router', __name__)
 
@@ -109,7 +110,7 @@ def sqlPush():
         select_sql = "select * from user where uid=" + id + " and password='" + pwd + "'"
         result = db.session.execute(select_sql).fetchall()
         if result != []:
-            return redirect('index.html')
+            return redirect(url_for('router.index'))
     return render_template('sqlPush.html')
 
 
@@ -121,18 +122,22 @@ def fileUpload():
         # 为防护文件上传漏洞而进行文件过滤 判断是否为符合pdf后缀的文件
         # if file and updownload_tool.allowed_file(file.filename):
         pdf_name = os.path.splitext(file.filename)[0]
-        filename = pdf_name + updownload_tool.rand_str() + '.pdf'
+        suffix = os.path.splitext(file.filename)[1]
+        # 拼接文件名
+        # filename = pdf_name + updownload_tool.rand_str() + '.pdf'
+        filename = pdf_name + updownload_tool.rand_str() + suffix
         file.save(os.path.join(pdfconfilg.UPLOAD_FOLDER, filename))
-        return redirect('get_url')
+        new_filename = attachment.Attachment(filename=filename)
+        db.session.add(new_filename)
+        db.session.commit()
+        return redirect(url_for('router.fileDownload'))
     return render_template('fileUpload.html')
 
 
-# 修改数据库存放文件网址的表 只需要一个字段filename即可 因为涉及到约束问题 怕把数据库弄乱 还未进行更改
 @router.route('/fileDownload/')
 def fileDownload():
-    # files = user.Files.query.all() files=0用来占位的 修改好数据库删掉即可
-    files=0
-    return render_template('base.html',files=files)
+    files = attachment.Attachment.query.all()
+    return render_template('fileDownload.html',files=files)
 
 
 @router.route('/download/')
