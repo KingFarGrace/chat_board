@@ -22,15 +22,15 @@
 }
 
 #indexText {
-    background-color:aliceblue;
+    background-color: aliceblue;
     text-align: center;
     min-height: 850px;
 }
 
-#registerTable ,#loginTable{
+#registerTable, #loginTable, #registerValidate{
     border-top: 5px solid #777777;
     border-left: 5px solid #777777;
-    background-color:aliceblue;
+    background-color: aliceblue;
     box-shadow: 10px 10px 30px #777777;
     font-size: 18px;
     padding: 15px;
@@ -70,7 +70,7 @@
     font-size: 20px;
 }
 
-#csrf {
+.csrf {
     margin-top: 50px;
     text-align: center;
     font-size: 20px;

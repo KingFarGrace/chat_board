@@ -3,7 +3,7 @@ from config import dbconfig, pdfconfilg
 # from config import logconfig
 from exts import db, app
 from views.router import router
-from models import user
+from models import user, attachment
 from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CsrfProtect
 
