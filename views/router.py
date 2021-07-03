@@ -123,6 +123,7 @@ def fileUpload():
         # if file and updownload_tool.allowed_file(file.filename):
         pdf_name = os.path.splitext(file.filename)[0]
         suffix = os.path.splitext(file.filename)[1]
+        # 拼接文件名
         # filename = pdf_name + updownload_tool.rand_str() + '.pdf'
         filename = pdf_name + updownload_tool.rand_str() + suffix
         file.save(os.path.join(pdfconfilg.UPLOAD_FOLDER, filename))
