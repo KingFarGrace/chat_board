@@ -61,6 +61,7 @@ def xss():
         return render_template('xss.html', user=user)
     return render_template('xss.html', user=user)
 
+
 @router.route('/csrf/', methods=['POST', 'GET'])
 def csrf():
     app.logger.info('GET csrf page')
@@ -162,15 +163,48 @@ def validate():
     （缺陷系统中去掉了密码格式验证器）
     """
     app.logger.info('GET penetration page')
-    register_form = RegisterForm()
+    # register_form = RegisterForm()
+    # if request.method == 'POST':
+    #     app.logger.warning('register form from /penetration/validate')
+    #     username = request.form.get('username')
+    #     password = request.form.get('password')
+    #     if register_form.validate_on_submit():
+    #         app.logger.info('valid form')
+    #         flash(account_itf.register(username, password))
+    #     else:
+    #         app.logger.error('invalid form')
+    #         flash(register_form.errors)
+    # return render_template('validate.html', form=register_form)
+    #
+    message = []
     if request.method == 'POST':
         app.logger.warning('register form from /penetration/validate')
         username = request.form.get('username')
         password = request.form.get('password')
-        if register_form.validate_on_submit():
-            app.logger.info('valid form')
-            flash(account_itf.register(username, password))
+        repwd = request.form.get('repwd')
+        if username == '':
+            message.append('用户名不能为空')
+        elif password == '':
+            message.append('密码不能为空')
+        elif password != repwd:
+            message.append('两次输入的密码不相同')
         else:
-            app.logger.error('invalid form')
-            flash(register_form.errors)
-    return render_template('validate.html', form=register_form)
+            app.logger.info('valid form')
+            account_itf.register(username, password)
+            message.append('注册成功')
+    return render_template('validate.html', message=message)
+
+
+@router.route('/penetration/ultra_vires')
+def ultra_vires():
+    pass
+
+
+@router.route('/penetration/horizon')
+def horizon():
+    pass
+
+
+@router.route('/penetration/vertical')
+def vertical():
+    pass
