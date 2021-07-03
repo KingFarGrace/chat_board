@@ -10,7 +10,7 @@
 {% block content %}
 <ul class="list-group">
     {% for file in files%}
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <!-- 添加csrf_token句即可开启csrf保护 -->
         <form method="get" action="/download" enctype="multipart/form-data">
             <li class="list-group-item">
                 <label>文件名：</label>

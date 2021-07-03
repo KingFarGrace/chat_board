@@ -9,7 +9,7 @@
 {% block content %}
 
 <form id="registerValidate" method="post">
-    {{ form.csrf_token() }}
+    <!-- 添加csrf_token句即可开启csrf保护 -->
     {{ form.username.label }} {{ form.username }} <br>
     {{ form.password.label }} {{ form.password }} <br>
     {{ form.repwd.label }} {{ form.repwd }} <br>
