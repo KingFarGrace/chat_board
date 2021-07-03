@@ -38,38 +38,28 @@ def index():
         return render_template('index.html', username=None)
     return render_template('index.html', username=cookie)
 
-
-# @router.route('/login/')
-# def login():
-#     return render_template('login.html')
-
-# @router.route('/register/')
-# def register():
-#     return render_template('register.html')
-
-# @router.route('/myPage/')
-# def myPage():
-#     return render_template('myPage.html')
-
-# @router.route('/textEdit/')
-# def textEdit():
-#     return render_template('textEdit.html')
-
-# @router.route('/textView/')
-# def textView():
-#     return render_template('textView.html')
+@router.route('/quit')
+def quit():
+     resp = make_response(render_template('index.html', username=None))
+     resp.delete_cookie("username")
+     return resp
 
 
 @router.route('/xss/', methods=['POST', 'GET'])
 def xss():
     app.logger.info('GET xss page')
-    # 发送POST请求更改内容
+    cookie = request.cookies.get("username")
+    user = None
+    if cookie is not None:
+        user = accountDAO.select_user_by_name(cookie)
+    # POST更新签名请求
     if request.method == 'POST':
-        search_content = request.form.get('searchContent')
-        app.logger.warning('form value:{}'.format(search_content))
-        return render_template('xss.html', searchContent=search_content)
-    return render_template('xss.html')
-
+        user = accountDAO.select_user_by_name(cookie)
+        uid = user.uid
+        new_signature = request.form.get('new_signature')
+        print(account_itf.update_info(uid, gender=user.gender, age=user.age, email=user.email, signature=new_signature))
+        return render_template('xss.html', user=user)
+    return render_template('xss.html', user=user)
 
 @router.route('/csrf/', methods=['POST', 'GET'])
 def csrf():
