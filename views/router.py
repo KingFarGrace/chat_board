@@ -1,4 +1,3 @@
-from logging import info
 from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory
 from views.interface import account_itf
 from utils.dbutils import accountDAO
@@ -160,7 +159,11 @@ def diaryLoss():
     return render_template('diaryLoss.html')
 
 
-@router.route('/penetration/')
+@router.route('/penetration/', methods=['POST'])
 def penetration():
     app.logger.info('get penetration page')
-    return render_template('penetration.html')
+    login_form = LoginForm()
+    username = request.form.get('username')
+    password = request.form.get('password')
+    user = account_itf.login('username', username, password)
+    return render_template('penetration.html', form=login_form)
