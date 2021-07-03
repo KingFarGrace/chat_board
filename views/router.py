@@ -1,13 +1,13 @@
-from logging import info
-from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory
-from views.interface import account_itf
-from utils.dbutils import accountDAO
-from exts import app
-from config import pdfconfilg
-from utils.dbutils import updownload_tool
 import os
-from exts import db
+
+from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory, flash
 from models import attachment
+from config import pdfconfilg
+from exts import app, db
+from utils.dbutils import accountDAO
+from utils.dbutils import updownload_tool
+from views.form.register_form import RegisterForm
+from views.interface import account_itf
 
 router = Blueprint('router', __name__)
 
@@ -15,7 +15,7 @@ router = Blueprint('router', __name__)
 # 用于测试练习的页面 随便怎么搞都行
 @router.route('/test')
 def test():
-    app.logger.info('get test page')
+    app.logger.info('GET test page')
     return render_template('test.html')
 
 
@@ -37,6 +37,7 @@ def index():
             return resp
         return render_template('index.html', username=None)
     return render_template('index.html', username=cookie)
+
 
 # @router.route('/login/')
 # def login():
@@ -61,7 +62,7 @@ def index():
 
 @router.route('/xss/', methods=['POST', 'GET'])
 def xss():
-    app.logger.info('get xss page')
+    app.logger.info('GET xss page')
     # 发送POST请求更改内容
     if request.method == 'POST':
         search_content = request.form.get('searchContent')
@@ -72,10 +73,10 @@ def xss():
 
 @router.route('/csrf/', methods=['POST', 'GET'])
 def csrf():
-    app.logger.info('get csrf page')
+    app.logger.info('GET csrf page')
     cookie = request.cookies.get("username")
     user = None
-    if cookie != None:
+    if cookie is not None:
         user = accountDAO.select_user_by_name(cookie)
     # POST转账请求
     if request.method == 'POST':
@@ -85,23 +86,23 @@ def csrf():
         uid = user.uid
         new_money = user.money - int(money)
         print(account_itf.updata_money(uid, new_money=new_money))
-        return '{}转账{}元到{}成功！'.format(cookie ,money, touser)
+        return '{}转账{}元到{}成功！'.format(cookie, money, touser)
     return render_template('csrf.html', user=user)
 
 
 @router.route('/httpHeader/')
 def httpHeader():
-    app.logger.info('get httpHeader page')
+    app.logger.info('GET httpHeader page')
     return render_template('httpHeader.html')
 
 
 @router.route('/contentTraverse/')
 def contentTraverse():
-    app.logger.info('get contentTraverse page')
+    app.logger.info('GET contentTraverse page')
     return render_template('contentTraverse.html')
 
 
-@router.route('/sqlPush/',methods=['GET','POST'])
+@router.route('/sqlPush/', methods=['GET', 'POST'])
 def sqlPush():
     app.logger.info('get sqlPush page')
     if request.method == 'POST':
@@ -114,9 +115,9 @@ def sqlPush():
     return render_template('sqlPush.html')
 
 
-@router.route('/fileUpload/',methods=['GET','POST'])
+@router.route('/fileUpload/', methods=['GET', 'POST'])
 def fileUpload():
-    app.logger.info('get fileUpload page')
+    app.logger.info('GET fileUpload page')
     if request.method == 'POST':
         file = request.files.get('pdf')
         # 为防护文件上传漏洞而进行文件过滤 判断是否为符合pdf后缀的文件
@@ -131,13 +132,15 @@ def fileUpload():
         db.session.add(new_filename)
         db.session.commit()
         return redirect(url_for('router.fileDownload'))
-    return render_template('fileUpload.html')
+    app.logger.info('GET sqlPush page')
+    return render_template('sqlPush.html')
 
 
 @router.route('/fileDownload/')
 def fileDownload():
+    app.logger.info('GET fileDownload page')
     files = attachment.Attachment.query.all()
-    return render_template('fileDownload.html',files=files)
+    return render_template('fileDownload.html', files=files)
 
 
 @router.route('/download/')
@@ -156,11 +159,28 @@ def download():
 
 @router.route('/diaryLoss/')
 def diaryLoss():
-    app.logger.info('get diaryLoss page')
+    app.logger.info('GET diaryLoss page')
     return render_template('diaryLoss.html')
 
 
-@router.route('/penetration/')
-def penetration():
-    app.logger.info('get penetration page')
-    return render_template('penetration.html')
+@router.route('/penetration/validate', methods=['GET', 'POST'])
+def validate():
+    """
+    使用WTForm进行前端表单传输，后端使用views.form.register_form文件中RegisterForm类进行接收，
+    并进行鉴权，格式检验等操作，避免用户设置了过于简单的密码导致被暴力破解。
+    在注册环节限定用户密码为8-16位包含大小写字母和数字的串，若不满足，则不允许注册，从而避免身份验证漏洞。
+    （缺陷系统中去掉了密码格式验证器）
+    """
+    app.logger.info('GET penetration page')
+    register_form = RegisterForm()
+    if request.method == 'POST':
+        app.logger.warning('register form from /penetration/validate')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if register_form.validate_on_submit():
+            app.logger.info('valid form')
+            flash(account_itf.register(username, password))
+        else:
+            app.logger.error('invalid form')
+            flash(register_form.errors)
+    return render_template('validate.html', form=register_form)

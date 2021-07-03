@@ -8,7 +8,7 @@ from models import user
 def register(username, password):
     result = select_user_by_name(username)
     if result is None:
-        new_user = user.User(username=username, password=password, gender='空', age=0, email='空', signature='这个人很懒，什么也没有写~', icon_url='static/img/default_figure.ico')
+        new_user = user.User(username=username, password=password, gender='空', age=0, email='空', signature='这个人很懒，什么也没有写~', icon_url='static/img/default_figure.ico', money=0)
         db.session.add(new_user)
         db.session.commit()
         return True

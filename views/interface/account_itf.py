@@ -5,13 +5,14 @@ from exts import app
 def register(username, password):
     if accountDAO.register(username, password) is True:
         app.logger.info('Success to register. new user: {}'.format(username))
-        return 'successfully register!'
+        return 'Successfully register!'
     else:
         app.logger.error('Failed to register with username: {}'.format(username))
-        return 'fail to register, please change your username and try again.'
+        return 'Fail to register, please change your username and try again.'
 
 
 def login(method, key, password):
+    user = None
     if method == 'uid':
         code = accountDAO.login_by_uid(key, password)
         if code == -1:
@@ -37,7 +38,6 @@ def login(method, key, password):
             info = accountDAO.select_user_by_name(key)
             app.logger.info('Login successfully')
             user = {'msg': 'successfully login!', 'info': info}
-
     return user
 
 
