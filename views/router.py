@@ -1,8 +1,12 @@
 from logging import info
-from flask import Blueprint, render_template, request, redirect, url_for, make_response
+from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory
 from views.interface import account_itf
 from utils.dbutils import accountDAO
 from exts import app
+from config import pdfconfilg
+from utils.dbutils import updownload_tool
+import os
+from exts import db
 
 router = Blueprint('router', __name__)
 
@@ -96,22 +100,53 @@ def contentTraverse():
     return render_template('contentTraverse.html')
 
 
-@router.route('/sqlPush/')
+@router.route('/sqlPush/',methods=['GET','POST'])
 def sqlPush():
     app.logger.info('get sqlPush page')
+    if request.method == 'POST':
+        id = request.form.get('id')
+        pwd = request.form.get('pwd')
+        select_sql = "select * from user where uid=" + id + " and password='" + pwd + "'"
+        result = db.session.execute(select_sql).fetchall()
+        if result != []:
+            return redirect('index.html')
     return render_template('sqlPush.html')
 
 
-@router.route('/fileDownload/')
-def fileDownload():
-    app.logger.info('get fileDownload page')
-    return render_template('fileDownload.html')
-
-
-@router.route('/fileUpload/')
+@router.route('/fileUpload/',methods=['GET','POST'])
 def fileUpload():
     app.logger.info('get fileUpload page')
+    if request.method == 'POST':
+        file = request.files.get('pdf')
+        # 为防护文件上传漏洞而进行文件过滤 判断是否为符合pdf后缀的文件
+        # if file and updownload_tool.allowed_file(file.filename):
+        pdf_name = os.path.splitext(file.filename)[0]
+        filename = pdf_name + updownload_tool.rand_str() + '.pdf'
+        file.save(os.path.join(pdfconfilg.UPLOAD_FOLDER, filename))
+        return redirect('get_url')
     return render_template('fileUpload.html')
+
+
+# 修改数据库存放文件网址的表 只需要一个字段filename即可 因为涉及到约束问题 怕把数据库弄乱 还未进行更改
+@router.route('/fileDownload/')
+def fileDownload():
+    # files = user.Files.query.all() files=0用来占位的 修改好数据库删掉即可
+    files=0
+    return render_template('base.html',files=files)
+
+
+@router.route('/download/')
+def download():
+    if request.method == 'GET':
+        filepath = request.args['filepath']
+        # 切割出文件名称
+        filename = filepath.split('/')[-1]
+        # 文件路径重命名 -> 去掉文件名 获得路径
+        filepath = filepath.replace(filename, '')
+        return send_from_directory(os.path.join(filepath), filename, as_attachment=True)
+        # 无漏洞的文件下载 后端拼接路径 前端获取文件名
+        # filename = request.args['filename']
+        # return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
 
 
 @router.route('/diaryLoss/')

@@ -7,5 +7,18 @@
 {% endblock %}
 
 {% block content %}
-
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<ul class="list-group">
+    {% for file in files%}
+        <form method="get" action="/download" enctype="multipart/form-data">
+            <li class="list-group-item">
+                <label>文件名：</label>
+                {{ file.filename }}
+<!--                <input type="hidden" value="{{ file.filename }}" name="filename">-->
+                <input type="hidden" value="pdf_files/{{ file.filename }}" name="filepath">
+                <input type="submit" value="下载文件">
+            </li>
+        </form>
+    {% endfor %}
+</ul>
 {% endblock %}
