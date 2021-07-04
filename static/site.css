@@ -1,4 +1,4 @@
-#registerTable, #loginTable, #registerValidator{
+#registerTable, .loginTable, #registerValidator{
     border-top: 5px solid #777777;
     border-left: 5px solid #777777;
     background-color: aliceblue;

@@ -1,13 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from utils.dbutils import accountDAO
-from models import user
-from exts import db
+
 from config import dbconfig
+from models import user
+from utils.dbutils import accountDAO
 
 
 class TestAccountDAO:
-
     select_test_result = user.User()
 
     def setup(self):

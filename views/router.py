@@ -1,12 +1,12 @@
 import os
 
-from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory, flash
-from models import attachment
+from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory
+
 from config import pdfconfilg
 from exts import app, db
+from models import attachment
 from utils.dbutils import accountDAO
 from utils.dbutils import updownload_tool
-from views.form.register_form import RegisterForm
 from views.interface import account_itf
 
 router = Blueprint('router', __name__)
@@ -38,11 +38,12 @@ def index():
         return render_template('index.html', username=None)
     return render_template('index.html', username=cookie)
 
+
 @router.route('/quit')
 def quit():
-     resp = make_response(render_template('index.html', username=None))
-     resp.delete_cookie("username")
-     return resp
+    resp = make_response(render_template('index.html', username=None))
+    resp.delete_cookie("username")
+    return resp
 
 
 @router.route('/xss/', methods=['POST', 'GET'])
@@ -101,7 +102,7 @@ def sqlPush():
         pwd = request.form.get('pwd')
         select_sql = "select * from user where uid=" + id + " and password='" + pwd + "'"
         result = db.session.execute(select_sql).fetchall()
-        if result != []:
+        if result:
             return redirect(url_for('router.index'))
     return render_template('sqlPush.html')
 
@@ -195,16 +196,44 @@ def validate():
     return render_template('validate.html', message=message)
 
 
-@router.route('/penetration/ultra_vires')
+@router.route('/penetration/ultravires')
 def ultra_vires():
-    pass
+    app.logger.info('GET ultra vires page')
+    user = None
+    if request.method == 'GET':
+        username = request.cookies.get('username')
+        app.logger.warning('check {}\'s info'.format(username))
+        user = accountDAO.select_user_by_name(username)
+    return render_template('ultravires.html', user=user)
 
 
-@router.route('/penetration/horizon')
+@router.route('/penetration/horizon', methods=['GET', 'POST'])
 def horizon():
-    pass
+    app.logger.info('GET ultra vires horizon page')
+    user = None
+    if request.method == 'GET':
+        username = request.args.get('username')
+        app.logger.warning('check {}\'s info'.format(username))
+        user = accountDAO.select_user_by_name(username)
+    return render_template('horizon.html', user=user)
 
 
-@router.route('/penetration/vertical')
+@router.route('/penetration/vertical', methods=['GET', 'POST'])
 def vertical():
-    pass
+    app.logger.info('GET ultra vires vertical page')
+    user = None
+    if request.method == 'POST':
+        username = request.form.get('username')
+        app.logger.warning('check {}\'s info'.format(username))
+        user = accountDAO.select_user_by_name(username)
+    return render_template('vertical.html', user=user)
+
+
+@router.route('/admin', methods=['GET', 'POST'])
+def admin():
+    app.logger.warning('GET admin page')
+    if request.method == 'POST':
+        uid = request.form.get('uid')
+        app.logger.warning('delete user: {}'.format(uid))
+        accountDAO.remove_user(uid)
+    return render_template('admin.html')

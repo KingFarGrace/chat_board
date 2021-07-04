@@ -7,12 +7,12 @@ HOST = '121.196.40.74'
 PORT = '3306'
 DATABASE = 'chat_board_sys'
 
-SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format( DIALECT, 
-                                                                        DRIVER, 
-                                                                        USERNAME, 
-                                                                        PASSWORD, 
-                                                                        HOST, 
-                                                                        PORT, 
-                                                                        DATABASE)
+SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format(DIALECT,
+                                                                       DRIVER,
+                                                                       USERNAME,
+                                                                       PASSWORD,
+                                                                       HOST,
+                                                                       PORT,
+                                                                       DATABASE)
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_COMMIT_TEARDOWN = True
