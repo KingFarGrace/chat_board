@@ -37,7 +37,10 @@ def index():
             resp.set_cookie("username", username)
             return resp
         return render_template('index.html', username=None)
-    return render_template('index.html', username=cookie)
+    resp = make_response(render_template('index.html', username=cookie))
+    userAgent = request.headers.get("User-Agent")
+    resp.set_cookie("User-Agent", userAgent)
+    return resp
 
 
 @router.route('/quit')
@@ -86,8 +89,23 @@ def csrf():
 @router.route('/httpHeader/')
 def httpHeader():
     app.logger.info('GET httpHeader page')
-    return render_template('httpHeader.html')
+    # 比较登录时的httpHeader
+    # pre_userAgent = request.cookies.get("User-Agent")
+    # userAgent = request.headers.get("User-Agent")
+    # if pre_userAgent != userAgent:
+    #     return render_template('httpHeader.html', headers = request.headers, msg = 'refuse')
+    return render_template('httpHeader.html', headers = request.headers, msg = 'success')
 
+# @app.before_request
+# def check_headers():
+#     pre_userAgent = request.cookies.get("User-Agent")
+#     userAgent = request.headers.get("User-Agent")
+#     if pre_userAgent == None:
+#         pass
+#     elif pre_userAgent != userAgent:
+#         return 'httpHeader被更改!'
+#     else:
+#         pass
 
 @router.route('/contentTraverse/')
 def contentTraverse():
