@@ -1,4 +1,5 @@
 import logging.handlers
+
 '''
 日志配置类
 引入flask应用后将会开启日志系统，在程序根目录下生成app.log日志文件(utf-8编码)

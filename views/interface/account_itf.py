@@ -1,5 +1,5 @@
-from utils.dbutils import accountDAO
 from exts import app
+from utils.dbutils import accountDAO
 
 
 def register(username, password):
@@ -76,9 +76,15 @@ def update_info(uid, **kwargs):
     else:
         return 'success to update info.'
 
+
 def updata_money(uid, new_money):
     result = accountDAO.select_user_by_uid(uid)
     if accountDAO.update_money(uid, new_money) is True:
         return 'success to change money'
     else:
         return 'failed to identify, please check your account and try again.'
+
+
+def is_admin(username):
+    uid = accountDAO.get_uid_by_username(username)
+    return accountDAO.check_admin_id(uid)

@@ -1,12 +1,12 @@
 import os
 
-from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory, flash
-from models import attachment
+from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory
+
 from config import pdfconfilg
 from exts import app, db
+from models import attachment
 from utils.dbutils import accountDAO
 from utils.dbutils import updownload_tool
-from views.form.register_form import RegisterForm
 from views.interface import account_itf
 
 router = Blueprint('router', __name__)
@@ -38,11 +38,12 @@ def index():
         return render_template('index.html', username=None)
     return render_template('index.html', username=cookie)
 
+
 @router.route('/quit')
 def quit():
-     resp = make_response(render_template('index.html', username=None))
-     resp.delete_cookie("username")
-     return resp
+    resp = make_response(render_template('index.html', username=None))
+    resp.delete_cookie("username")
+    return resp
 
 
 @router.route('/xss/', methods=['POST', 'GET'])
@@ -60,6 +61,7 @@ def xss():
         print(account_itf.update_info(uid, gender=user.gender, age=user.age, email=user.email, signature=new_signature))
         return render_template('xss.html', user=user)
     return render_template('xss.html', user=user)
+
 
 @router.route('/csrf/', methods=['POST', 'GET'])
 def csrf():
@@ -100,7 +102,7 @@ def sqlPush():
         pwd = request.form.get('pwd')
         select_sql = "select * from user where uid=" + id + " and password='" + pwd + "'"
         result = db.session.execute(select_sql).fetchall()
-        if result != []:
+        if result:
             return redirect(url_for('router.index'))
     return render_template('sqlPush.html')
 
@@ -162,15 +164,95 @@ def validate():
     （缺陷系统中去掉了密码格式验证器）
     """
     app.logger.info('GET penetration page')
-    register_form = RegisterForm()
+    # register_form = RegisterForm()
+    # if request.method == 'POST':
+    #     app.logger.warning('register form from /penetration/validate')
+    #     username = request.form.get('username')
+    #     password = request.form.get('password')
+    #     if register_form.validate_on_submit():
+    #         app.logger.info('valid form')
+    #         flash(account_itf.register(username, password))
+    #     else:
+    #         app.logger.error('invalid form')
+    #         flash(register_form.errors)
+    # return render_template('validate.html', form=register_form)
+    #
+    message = []
     if request.method == 'POST':
         app.logger.warning('register form from /penetration/validate')
         username = request.form.get('username')
         password = request.form.get('password')
-        if register_form.validate_on_submit():
-            app.logger.info('valid form')
-            flash(account_itf.register(username, password))
+        repwd = request.form.get('repwd')
+        if username == '':
+            message.append('用户名不能为空')
+        elif password == '':
+            message.append('密码不能为空')
+        elif password != repwd:
+            message.append('两次输入的密码不相同')
         else:
-            app.logger.error('invalid form')
-            flash(register_form.errors)
-    return render_template('validate.html', form=register_form)
+            app.logger.info('valid form')
+            account_itf.register(username, password)
+            message.append('注册成功')
+    return render_template('validate.html', message=message)
+
+
+@router.route('/penetration/ultravires')
+def ultra_vires():
+    app.logger.info('GET ultra vires page')
+    user = None
+    if request.method == 'GET':
+        username = request.cookies.get('username')
+        app.logger.warning('check {}\'s info'.format(username))
+        user = accountDAO.select_user_by_name(username)
+    return render_template('ultravires.html', user=user)
+
+
+@router.route('/penetration/horizon', methods=['GET', 'POST'])
+def horizon():
+    app.logger.info('GET ultra vires horizon page')
+    user = None
+    if request.method == 'GET':
+        username = request.args.get('username')
+        # 此部分为后端鉴权逻辑，缺陷系统中不启用
+        # owner = request.cookies.get('username')
+        # if owner != username:
+        #     app.logger.error('Unauthenticated request')
+        # else:
+        #     app.logger.warning('check {}\'s info'.format(username))
+        #     user = accountDAO.select_user_by_name(username)
+        app.logger.warning('check {}\'s info'.format(username))
+        user = accountDAO.select_user_by_name(username)
+    return render_template('horizon.html', user=user)
+
+
+@router.route('/penetration/vertical', methods=['GET', 'POST'])
+def vertical():
+    app.logger.info('GET ultra vires vertical page')
+    user = None
+    if request.method == 'POST':
+        username = request.form.get('username')
+        app.logger.warning('check {}\'s info'.format(username))
+        user = accountDAO.select_user_by_name(username)
+    return render_template('vertical.html', user=user)
+
+
+@router.route('/admin', methods=['GET', 'POST'])
+def admin():
+    # 此部分为后端鉴权逻辑，缺陷系统中不启用
+    # username = request.cookies.get('username')
+    # if account_itf.is_admin(username):
+    #     app.logger.warning('GET admin page')
+    #     if request.method == 'POST':
+    #         uid = request.form.get('uid')
+    #         app.logger.warning('delete user: {}'.format(uid))
+    #         accountDAO.remove_user(uid)
+    #     return render_template('admin.html')
+    # else:
+    #     app.logger.error('Unauthenticated request')
+    #     return render_template('index.html')
+    app.logger.warning('GET admin page')
+    if request.method == 'POST':
+        uid = request.form.get('uid')
+        app.logger.warning('delete user: {}'.format(uid))
+        accountDAO.remove_user(uid)
+    return render_template('admin.html')

@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 
-from exts import db
-from models import user
+from exts import db, app
+from models import user, admin
 
 
 def register(username, password):
     result = select_user_by_name(username)
     if result is None:
-        new_user = user.User(username=username, password=password, gender='空', age=0, email='空', signature='这个人很懒，什么也没有写~', icon_url='static/img/default_figure.ico', money=0)
+        new_user = user.User(username=username, password=password, gender='空', age=0, email='空',
+                             signature='这个人很懒，什么也没有写~', icon_url='static/img/default_figure.ico', money=0)
         db.session.add(new_user)
         db.session.commit()
         return True
@@ -83,7 +84,7 @@ def update_age(uid, new_a):
         db.session.commit()
         return True
     else:
-        return False        
+        return False
 
 
 def update_email(uid, new_em):
@@ -93,7 +94,7 @@ def update_email(uid, new_em):
         db.session.commit()
         return True
     else:
-        return False        
+        return False
 
 
 def update_signature(uid, new_s):
@@ -103,7 +104,7 @@ def update_signature(uid, new_s):
         db.session.commit()
         return True
     else:
-        return False                
+        return False
 
 
 def update_figure(uid, new_url):
@@ -113,7 +114,8 @@ def update_figure(uid, new_url):
         db.session.commit()
         return True
     else:
-        return False    
+        return False
+
 
 def update_money(uid, new_money):
     result = user.User.query.filter(user.User.uid == uid).first()
@@ -122,9 +124,28 @@ def update_money(uid, new_money):
         db.session.commit()
         return True
     else:
-        return False    
+        return False
+
 
 def remove_user(uid):
-    result = user.User.query.filter(user.User.uid == uid).first()
-    db.session.delete(result)
-    db.session.commit()
+    try:
+        result = user.User.query.filter(user.User.uid == uid).first()
+        db.session.delete(result)
+        db.session.commit()
+        app.logger.warning('delete user with uid: {}'.format(uid))
+    except Exception as e:
+        app.logger.error('failed to delete uid: {}'.format(uid))
+        return e
+
+
+def get_uid_by_username(username):
+    result = user.User.query.filter(user.User.username == username).first()
+    return result.uid
+
+
+def check_admin_id(uid):
+    result = admin.Admin.query.filter(admin.Admin.uid == uid).first()
+    if result is None:
+        return False
+    else:
+        return True
