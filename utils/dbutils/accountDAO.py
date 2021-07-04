@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 from exts import db, app
-from models import user
+from models import user, admin
 
 
 def register(username, password):
@@ -136,3 +136,16 @@ def remove_user(uid):
     except Exception as e:
         app.logger.error('failed to delete uid: {}'.format(uid))
         return e
+
+
+def get_uid_by_username(username):
+    result = user.User.query.filter(user.User.username == username).first()
+    return result.uid
+
+
+def check_admin_id(uid):
+    result = admin.Admin.query.filter(admin.Admin.uid == uid).first()
+    if result is None:
+        return False
+    else:
+        return True

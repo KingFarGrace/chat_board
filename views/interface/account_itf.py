@@ -69,9 +69,9 @@ def change_pwd(uid, old_pwd, new_pwd):
 
 def update_info(uid, **kwargs):
     if (accountDAO.update_gender(uid, kwargs['gender']) and
-        accountDAO.update_age(uid, kwargs['age']) and
-        accountDAO.update_email(uid, kwargs['email']) and
-        accountDAO.update_signature(uid, kwargs['signature'])) is False:
+            accountDAO.update_age(uid, kwargs['age']) and
+            accountDAO.update_email(uid, kwargs['email']) and
+            accountDAO.update_signature(uid, kwargs['signature'])) is False:
         return 'failed to identify, please check your account and try again.'
     else:
         return 'success to update info.'
@@ -83,3 +83,8 @@ def updata_money(uid, new_money):
         return 'success to change money'
     else:
         return 'failed to identify, please check your account and try again.'
+
+
+def is_admin(username):
+    uid = accountDAO.get_uid_by_username(username)
+    return accountDAO.check_admin_id(uid)
