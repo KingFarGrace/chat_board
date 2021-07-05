@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory
+from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory, session
 
 from config import pdfconfilg
 from exts import app, db
@@ -35,6 +35,7 @@ def index():
             # 设置cookie
             resp = make_response(render_template('index.html', username=username))
             resp.set_cookie("username", username)
+            session['username'] = username
             return resp
         return render_template('index.html', username=None)
     resp = make_response(render_template('index.html', username=cookie))
@@ -47,6 +48,7 @@ def index():
 def quit():
     resp = make_response(render_template('index.html', username=None))
     resp.delete_cookie("username")
+    # session.pop("username")
     return resp
 
 
@@ -89,23 +91,15 @@ def csrf():
 @router.route('/httpHeader/')
 def httpHeader():
     app.logger.info('GET httpHeader page')
-    # 比较登录时的httpHeader
-    # pre_userAgent = request.cookies.get("User-Agent")
-    # userAgent = request.headers.get("User-Agent")
-    # if pre_userAgent != userAgent:
-    #     return render_template('httpHeader.html', headers = request.headers, msg = 'refuse')
-    return render_template('httpHeader.html', headers = request.headers, msg = 'success')
+    cookie = request.cookies.get("username")
+    user = None
+    print(session)
+    if cookie is not None:
+        if cookie != session.get('username'):
+            return 'request error'
+        user = accountDAO.select_user_by_name(cookie)
+    return render_template('httpHeader.html', user=user)
 
-# @app.before_request
-# def check_headers():
-#     pre_userAgent = request.cookies.get("User-Agent")
-#     userAgent = request.headers.get("User-Agent")
-#     if pre_userAgent == None:
-#         pass
-#     elif pre_userAgent != userAgent:
-#         return 'httpHeader被更改!'
-#     else:
-#         pass
 
 @router.route('/contentTraverse/')
 def contentTraverse():
