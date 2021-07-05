@@ -38,17 +38,14 @@ def index():
             session['username'] = username
             return resp
         return render_template('index.html', username=None)
-    resp = make_response(render_template('index.html', username=cookie))
-    userAgent = request.headers.get("User-Agent")
-    resp.set_cookie("User-Agent", userAgent)
-    return resp
+    return render_template('index.html', username=cookie)
 
 
 @router.route('/quit')
 def quit():
     resp = make_response(render_template('index.html', username=None))
     resp.delete_cookie("username")
-    # session.pop("username")
+    session.pop("username")
     return resp
 
 
