@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}日志不全或无操作日志{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}"/>
+<script src='https://cdn.bootcdn.net/ajax/libs/jsencrypt/3.1.0/jsencrypt.js'></script>
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="{{ url_for('static', filename='encrypt.js') }}"></script>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+
+
+{% endblock %}
+
+{% block content %}
+
+{% if user == None %}
+<form class="loginTable" method="post">
+    <!-- 添加csrf_token句即可开启csrf保护 -->
+    <input type="hidden" id="public_key" value="{{ public_key }}"/>
+    <input type="text" placeholder="输入用户名" name="username" id="usr">
+    <input type="password" placeholder="输入密码" name="password" id="pwd">
+    <input type="submit" value="登录" id="loginBtn">
+</form>
+{% else %}
+<div class="loginTable">
+    <div>登录成功！</div>
+</div>
+{% endif %}
+
+{% endblock %}
