@@ -5,6 +5,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, make_r
 from config import pdfconfilg
 from exts import app, db
 from models import attachment
+from utils import cryptoutil
 from utils.dbutils import accountDAO
 from utils.dbutils import updownload_tool
 from views.interface import account_itf
@@ -256,3 +257,28 @@ def admin():
         app.logger.warning('delete user: {}'.format(uid))
         accountDAO.remove_user(uid)
     return render_template('admin.html')
+
+
+@router.route('/penetration/encrypt', methods=['GET', 'POST'])
+def encrypt():
+    """
+    前后端加密传输，对照 router.index 页中的登录模块
+    在该页面中，前端表单密码被加密后才传到后端，提高了安全性
+    后端解密方法 decrypt() 见 utils.cryptoutil 模块
+    前端使用jsencrypt库进行加密，公钥由后端提供
+    """
+    user = None
+    with open('config/public_key.pem', 'r') as reader:
+        public_key = reader.read()
+    if request.method == 'GET':
+        app.logger.info('GET encrypt page')
+        return render_template('encrypt.html', user=user, public_key=public_key)
+    if request.method == 'POST':
+        login_method = 'username'
+        username = request.form.get('username')
+        password = request.form.get('password')
+        app.logger.info('decrypt pwd: {}'.format(password))
+        password = cryptoutil.decrypt(password)
+        app.logger.warning('{} request login by {}'.format(username, login_method))
+        user = account_itf.login(login_method, username, password.decode('utf-8'))
+        return render_template('encrypt.html', user=user['info'], public_key=public_key)
