@@ -134,8 +134,7 @@ def fileUpload():
         db.session.add(new_filename)
         db.session.commit()
         return redirect(url_for('router.fileDownload'))
-    app.logger.info('GET sqlPush page')
-    return render_template('sqlPush.html')
+    return render_template('fileUpload.html')
 
 
 @router.route('/fileDownload/')
