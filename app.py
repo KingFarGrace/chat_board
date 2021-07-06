@@ -3,7 +3,7 @@ from flask_wtf.csrf import CsrfProtect
 
 from config import dbconfig, pdfconfilg
 # 注释掉该行import语句，即可关闭日志功能
-# from config import logconfig
+from config import logconfig
 from exts import db, app
 from views.router import router
 

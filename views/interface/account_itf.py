@@ -72,16 +72,20 @@ def update_info(uid, **kwargs):
             accountDAO.update_age(uid, kwargs['age']) and
             accountDAO.update_email(uid, kwargs['email']) and
             accountDAO.update_signature(uid, kwargs['signature'])) is False:
+        app.logger.error('Failed to change user info.')
         return 'failed to identify, please check your account and try again.'
     else:
+        app.logger.info('uid: {} info changed'.format(uid))
         return 'success to update info.'
 
 
 def updata_money(uid, new_money):
     result = accountDAO.select_user_by_uid(uid)
     if accountDAO.update_money(uid, new_money) is True:
+        app.logger.info('Success to change money.')
         return 'success to change money'
     else:
+        app.logger.error('Failed to identify, please check your account and try again.')
         return 'failed to identify, please check your account and try again.'
 
 

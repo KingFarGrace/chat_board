@@ -146,6 +146,8 @@ def get_uid_by_username(username):
 def check_admin_id(uid):
     result = admin.Admin.query.filter(admin.Admin.uid == uid).first()
     if result is None:
+        app.logger.error('uid: {} is not admin'.format(uid))
         return False
     else:
+        app.logger.info('Authenticate pass. uid: {}'.format(uid))
         return True

@@ -1,16 +1,3 @@
-# chat_board
-
-a chat board system
-
-### 目录结构
-
-+ config：存放配置文件（具体说明待扩充，下同）
-+ model：model层，存放模型文件
-+ template：view层，存放模板（视图）文件
-+ view：controller层，存放路由文件及接口方法文件
-+ util：存放工具类及常用工具方法
-+ test：存放测试文件，包括单元测试及接口测试
-
 # 系统漏洞描述
 
 ### 跨站脚本（XSS）
@@ -34,6 +21,18 @@ a chat board system
 + 漏洞解决步骤：提交请求时将请求中的cookie与session对比，不同则丢弃返回错误
 
 ### 目标遍历漏洞
+
++ 漏洞成因：服务器对于用户发来的url请求不加以限制，使得用户可以任意访问服务器上的目录，从而窃取敏感数据。
+
++ 漏洞实现：在`nginx.conf`中作如下设置即可实现目录遍历漏洞。
+
+  ```
+  location / {
+  	autoindex on;
+  }
+  ```
+
++ 漏洞解决步骤：将上述配置修改为`autoindex off;`
 
 ### SQL 注入
 
