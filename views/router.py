@@ -160,6 +160,7 @@ def download():
         filename = filepath.split('/')[-1]
         # 文件路径重命名 -> 去掉文件名 获得路径
         filepath = filepath.replace(filename, '')
+        app.logger.warning('ready to download file: {}'.format(filepath))
         return send_from_directory(os.path.join(filepath), filename, as_attachment=True)
         # 无漏洞的文件下载 后端拼接路径 前端获取文件名
         # filename = request.args['filename']
