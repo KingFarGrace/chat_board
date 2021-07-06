@@ -119,6 +119,11 @@ def sqlPush():
         user = account_itf.login('uid', id, pwd)
         if user['msg'] == 'successfully login!':
             return redirect(url_for('router.fileDownload'))
+        # select_sql = "select * from user where uid=" + id + " and password='" + pwd + "'"
+        # app.logger.info('execute sql: {}'.format(select_sql))
+        # result = db.session.execute(select_sql).fetchall()
+        # if result:
+        #     return redirect(url_for('router.index'))
     return render_template('sqlPush.html')
 
 
@@ -136,6 +141,17 @@ def fileUpload():
             db.session.add(new_filename)
             db.session.commit()
             return redirect(url_for('router.fileDownload'))
+        # pdf_name = os.path.splitext(file.filename)[0]
+        # suffix = os.path.splitext(file.filename)[1]
+        # # 拼接文件名
+        # # filename = pdf_name + updownload_tool.rand_str() + '.pdf'
+        # filename = pdf_name + updownload_tool.rand_str() + suffix
+        # file.save(os.path.join(pdfconfilg.UPLOAD_FOLDER, filename))
+        # app.logger.warning('filename: {} has been saved to the server'.format(filename))
+        # new_filename = attachment.Attachment(filename=filename)
+        # db.session.add(new_filename)
+        # db.session.commit()
+        # return redirect(url_for('router.fileDownload'))
     return render_template('fileUpload.html')
 
 
@@ -151,6 +167,11 @@ def download():
     if request.method == 'GET':
         filename = request.args['filename']
         return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
+        # filepath = request.args['filepath']
+        # filename = filepath.split('/')[-1]
+        # filepath = filepath.replace(filename, '')
+        # app.logger.warning('ready to download file: {}'.format(filepath))
+        # return send_from_directory(os.path.join(filepath), filename, as_attachment=True)
 
 
 @router.route('/diaryLoss/')
