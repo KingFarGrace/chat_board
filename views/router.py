@@ -232,14 +232,14 @@ def horizon():
     if request.method == 'GET':
         username = request.args.get('username')
         # 此部分为后端鉴权逻辑，缺陷系统中不启用
-        # owner = request.cookies.get('username')
-        # if owner != username:
-        #     app.logger.error('Unauthenticated request')
-        # else:
-        #     app.logger.warning('check {}\'s info'.format(username))
-        #     user = accountDAO.select_user_by_name(username)
-        app.logger.warning('check {}\'s info'.format(username))
-        user = accountDAO.select_user_by_name(username)
+        owner = request.cookies.get('username')
+        if owner != username:
+            app.logger.error('Unauthenticated request')
+        else:
+            app.logger.warning('check {}\'s info'.format(username))
+            user = accountDAO.select_user_by_name(username)
+        # app.logger.warning('check {}\'s info'.format(username))
+        # user = accountDAO.select_user_by_name(username)
     return render_template('horizon.html', user=user)
 
 
@@ -257,23 +257,24 @@ def vertical():
 @router.route('/admin', methods=['GET', 'POST'])
 def admin():
     # 此部分为后端鉴权逻辑，缺陷系统中不启用
-    # username = request.cookies.get('username')
-    # if account_itf.is_admin(username):
-    #     app.logger.warning('GET admin page')
-    #     if request.method == 'POST':
-    #         uid = request.form.get('uid')
-    #         app.logger.warning('delete user: {}'.format(uid))
-    #         accountDAO.remove_user(uid)
-    #     return render_template('admin.html')
-    # else:
-    #     app.logger.error('Unauthenticated request')
-    #     return render_template('index.html')
-    app.logger.warning('GET admin page')
-    if request.method == 'POST':
-        uid = request.form.get('uid')
-        app.logger.warning('delete user: {}'.format(uid))
-        accountDAO.remove_user(uid)
-    return render_template('admin.html')
+    username = request.cookies.get('username')
+    if account_itf.is_admin(username):
+        app.logger.warning('GET admin page')
+        if request.method == 'POST':
+            uid = request.form.get('uid')
+            app.logger.warning('delete user: {}'.format(uid))
+            accountDAO.remove_user(uid)
+        return render_template('admin.html')
+    else:
+        app.logger.error('Unauthenticated request')
+        return render_template('index.html')
+    #
+    # app.logger.warning('GET admin page')
+    # if request.method == 'POST':
+    #     uid = request.form.get('uid')
+    #     app.logger.warning('delete user: {}'.format(uid))
+    #     accountDAO.remove_user(uid)
+    # return render_template('admin.html')
 
 
 @router.route('/penetration/encrypt', methods=['GET', 'POST'])
