@@ -116,6 +116,9 @@ def sqlPush():
     if request.method == 'POST':
         id = request.form.get('id')
         pwd = request.form.get('pwd')
+        user = account_itf.login('uid', id, pwd)
+        if user['msg'] == 'successfully login!':
+            return redirect(url_for('router.fileDownload'))
     return render_template('sqlPush.html')
 
 
@@ -146,6 +149,8 @@ def fileDownload():
 @router.route('/download/')
 def download():
     if request.method == 'GET':
+        filename = request.args['filename']
+        return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
 
 
 @router.route('/diaryLoss/')
