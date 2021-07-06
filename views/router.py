@@ -1,6 +1,7 @@
 import os
 
-from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory, session
+from flask import Blueprint, render_template, request, redirect, url_for, make_response, send_from_directory, session, \
+    flash
 
 from config import pdfconfilg
 from exts import app, db
@@ -8,6 +9,7 @@ from models import attachment
 from utils import cryptoutil
 from utils.dbutils import accountDAO
 from utils.dbutils import updownload_tool
+from views.form.register_form import RegisterForm
 from views.interface import account_itf
 
 router = Blueprint('router', __name__)
@@ -46,6 +48,7 @@ def quit():
     resp = make_response(render_template('index.html', username=None))
     resp.delete_cookie("username")
     session.pop("username")
+    app.logger.info('user logout')
     return resp
 
 
@@ -61,6 +64,7 @@ def xss():
         user = accountDAO.select_user_by_name(cookie)
         uid = user.uid
         new_signature = request.form.get('new_signature')
+        app.logger.info('new signature:{} for user:{}'.format(new_signature, cookie))
         print(account_itf.update_info(uid, gender=user.gender, age=user.age, email=user.email, signature=new_signature))
         return render_template('xss.html', user=user)
     return render_template('xss.html', user=user)
@@ -81,6 +85,7 @@ def csrf():
         uid = user.uid
         new_money = user.money - int(money)
         print(account_itf.updata_money(uid, new_money=new_money))
+        app.warning('dealing: user: {} -- {}￥ --> user: {}'.format(cookie, money, touser))
         return '{}转账{}元到{}成功！'.format(cookie, money, touser)
     return render_template('csrf.html', user=user)
 
@@ -93,6 +98,7 @@ def httpHeader():
     print(session)
     if cookie is not None:
         if cookie != session.get('username'):
+            app.logger.error('WRONG cookie value.')
             return 'request error'
         user = accountDAO.select_user_by_name(cookie)
     return render_template('httpHeader.html', user=user)
@@ -111,6 +117,7 @@ def sqlPush():
         id = request.form.get('id')
         pwd = request.form.get('pwd')
         select_sql = "select * from user where uid=" + id + " and password='" + pwd + "'"
+        app.logger.info('execute sql: {}'.format(select_sql))
         result = db.session.execute(select_sql).fetchall()
         if result:
             return redirect(url_for('router.index'))
@@ -130,6 +137,7 @@ def fileUpload():
         # filename = pdf_name + updownload_tool.rand_str() + '.pdf'
         filename = pdf_name + updownload_tool.rand_str() + suffix
         file.save(os.path.join(pdfconfilg.UPLOAD_FOLDER, filename))
+        app.logger.warning('filename: {} has been saved to the server'.format(filename))
         new_filename = attachment.Attachment(filename=filename)
         db.session.add(new_filename)
         db.session.commit()
@@ -173,36 +181,36 @@ def validate():
     （缺陷系统中去掉了密码格式验证器）
     """
     app.logger.info('GET penetration page')
-    # register_form = RegisterForm()
-    # if request.method == 'POST':
-    #     app.logger.warning('register form from /penetration/validate')
-    #     username = request.form.get('username')
-    #     password = request.form.get('password')
-    #     if register_form.validate_on_submit():
-    #         app.logger.info('valid form')
-    #         flash(account_itf.register(username, password))
-    #     else:
-    #         app.logger.error('invalid form')
-    #         flash(register_form.errors)
-    # return render_template('validate.html', form=register_form)
-    #
-    message = []
+    register_form = RegisterForm()
     if request.method == 'POST':
         app.logger.warning('register form from /penetration/validate')
         username = request.form.get('username')
         password = request.form.get('password')
-        repwd = request.form.get('repwd')
-        if username == '':
-            message.append('用户名不能为空')
-        elif password == '':
-            message.append('密码不能为空')
-        elif password != repwd:
-            message.append('两次输入的密码不相同')
-        else:
+        if register_form.validate_on_submit():
             app.logger.info('valid form')
-            account_itf.register(username, password)
-            message.append('注册成功')
-    return render_template('validate.html', message=message)
+            flash(account_itf.register(username, password))
+        else:
+            app.logger.error('invalid form')
+            flash(register_form.errors)
+    return render_template('validate.html', form=register_form)
+    #
+    # message = []
+    # if request.method == 'POST':
+    #     app.logger.warning('register form from /penetration/validate')
+    #     username = request.form.get('username')
+    #     password = request.form.get('password')
+    #     repwd = request.form.get('repwd')
+    #     if username == '':
+    #         message.append('用户名不能为空')
+    #     elif password == '':
+    #         message.append('密码不能为空')
+    #     elif password != repwd:
+    #         message.append('两次输入的密码不相同')
+    #     else:
+    #         app.logger.info('valid form')
+    #         account_itf.register(username, password)
+    #         message.append('注册成功')
+    # return render_template('validate.html', message=message)
 
 
 @router.route('/penetration/ultravires')
