@@ -13,21 +13,22 @@
 <div class='csrf'>
     <div>已登录：{{ user['username'] }}</div>
     <!-- 正确写法，用{}传参数的方法即可避免 -->
-    <!-- <div>个性签名：{{ user['signature'] }}</div> -->
+    <div>个性签名：{{ user['signature'] }}</div>
 
     <!-- 漏洞出现，用js直接改文件的标签属性 -->
     <!-- 输入框输入
         <a href="https://www.baidu.com">百度</a> 
         使标签属性多出超链接连接到外网-->
-    <body onload="load('{{ user.signature }}')"></body>
+    <!-- <body onload="load('{{ user.signature }}')"></body>
     <div class="xss">
         <div>个性签名：</div>
         <div id="result"></div>
-    </div>
+    </div> -->
 
     <!-- 发送表单 -->
     <form class="csrf" method="POST">
         <!-- 添加csrf_token句即可开启csrf保护 -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="text" placeholder="输入新个性签名" name="new_signature">
         <input type="submit" value="确认">
     </form>

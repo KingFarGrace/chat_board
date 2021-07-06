@@ -9,6 +9,7 @@
 {% block content %}
 <form method="post">
     <!-- 添加csrf_token句即可开启csrf保护 -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <table id="loginTable" align="center">
         <tr>
             <td><label>用户名:</label></td>

@@ -25,7 +25,7 @@ a chat board system
 + 漏洞实现：先在index页面登录账号，再到csrf页面下，点击“csrf漏洞”，转跳到 csrf_hack 页面，依靠浏览器已保存的cookie发送转账请求（项目处于csrf保护状态）
 + 漏洞解决步骤：更改app.py中的CsrfProtect(app)，并把html中带有表单提交的地方添加csrf_token语句即可
   如：<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-+ 需要更改的文件：app.py csrf.html fileDownload.html fileUpload.html index.html sqlPush.html xss.html（validate.html中 添加 {{
++ 需要更改的文件：app.py admin.html csrf.html encrypy.html fileDownload.html fileUpload.html index.html sqlPush.html ultravires.html xss.html（validate.html中 添加 {{
   form.csrf_token() }} ）（待扩充）
 
 ### HTTP 请求头注入
