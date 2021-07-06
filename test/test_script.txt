@@ -1,0 +1,5 @@
+# 默认根路径为 ~.[项目目录名]
+# 测试账户DAO操作函数
+pytest -vv test/utils/dbutils/test_accountDAO.py
+# 测试账户操作接口函数
+pytest -vv test/views/interface/test_account_itf.py

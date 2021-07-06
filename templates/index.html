@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}主页{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}"/>
+{% endblock %}
+
+{% block content %}
+{% if username == None %}
+<form class="loginTable" method="POST">
+    <!-- 添加csrf_token句即可开启csrf保护 -->
+    <input type="text" placeholder="输入用户名" name="username">
+    <input type="password" placeholder="输入密码" name="password">
+    <input type="submit" value="登录">
+</form>
+{% else %}
+<div class="loginTable">
+    <div>登录成功！{{ username }}</div>
+    <a href="{{ url_for('router.quit') }}">退出</a>
+</div>
+{% endif %}
+{% endblock %}

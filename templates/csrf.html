@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}跨站请求伪造（CSRF）漏洞{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}"/>
+{% endblock %}
+
+{% block content %}
+{% if user != None %}
+<div class='csrf'>
+    <div>已登录：{{ user['username'] }}</div>
+    <div>余额：{{ user['money'] }}</div>
+    <form class="csrf" method="POST">
+        <!-- 添加csrf_token句即可开启csrf保护 -->
+        <input type="text" placeholder="输入转账用户" name="touser">
+        <input type="text" placeholder="输入转账金额" name="money">
+        <input type="submit" value="确认">
+    </form>
+    <a href="../static/csrf_hack.html">csrf漏洞</a>
+</div>
+{% else %}
+<div class='csrf'>
+    <div>未登录！</div>
+</div>
+{% endif %}
+{% endblock %}

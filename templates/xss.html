@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}跨站脚本（XSS）漏洞{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}"/>
+<script src="{{url_for('static', filename='xss.js')}}"></script>
+{% endblock %}
+
+{% block content %}
+
+{% if user != None %}
+<div class='csrf'>
+    <div>已登录：{{ user['username'] }}</div>
+    <!-- 正确写法，用{}传参数的方法即可避免 -->
+    <!-- <div>个性签名：{{ user['signature'] }}</div> -->
+
+    <!-- 漏洞出现，用js直接改文件的标签属性 -->
+    <!-- 输入框输入
+        <a href="https://www.baidu.com">百度</a> 
+        使标签属性多出超链接连接到外网-->
+    <body onload="load('{{ user.signature }}')"></body>
+    <div class="xss">
+        <div>个性签名：</div>
+        <div id="result"></div>
+    </div>
+
+    <!-- 发送表单 -->
+    <form class="csrf" method="POST">
+        <!-- 添加csrf_token句即可开启csrf保护 -->
+        <input type="text" placeholder="输入新个性签名" name="new_signature">
+        <input type="submit" value="确认">
+    </form>
+</div>
+{% else %}
+<div class='csrf'>
+    <div>未登录！</div>
+</div>
+{% endif %}
+{% endblock %}

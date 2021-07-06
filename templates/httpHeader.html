@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}HTTP Header注入漏洞{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}"/>
+{% endblock %}
+
+{% block content %}
+{% if user != None %}
+<div class='csrf'>
+    <div>已登录：{{ user['username'] }}</div>
+    <div>邮箱：{{ user['email'] }}</div>
+    <div>个性签名：{{ user['signature'] }}</div>
+    <div>余额：{{ user['money'] }}</div>
+</div>
+{% else %}
+<div class='csrf'>
+    <div>未登录！</div>
+</div>
+{% endif %}
+{% endblock %}

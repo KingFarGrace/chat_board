@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}SQL注入漏洞{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='site.css')}}"/>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <!-- 添加csrf_token句即可开启csrf保护 -->
+    <table id="loginTable" align="center">
+        <tr>
+            <td><label>用户名:</label></td>
+            <td><input type="text" name="id" placeholder="请输入账号"></td>
+        </tr>
+        <tr>
+            <td><label>密码:</label></td>
+            <td><input type="password" name="pwd" placeholder="请输入密码"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="登录">
+                <input type="reset" value="重置">
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}
