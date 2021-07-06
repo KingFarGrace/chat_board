@@ -16,8 +16,8 @@
         <li class="list-group-item">
             <label>文件名：</label>
             {{ file.filename }}
-            <!--                <input type="hidden" value="{{ file.filename }}" name="filename">-->
-            <input type="hidden" value="pdf_files/{{ file.filename }}" name="filepath">
+            <input type="hidden" value="{{ file.filename }}" name="filename">
+            <!-- <input type="hidden" value="pdf_files/{{ file.filename }}" name="filepath"> -->
             <input type="submit" value="下载文件">
         </li>
     </form>

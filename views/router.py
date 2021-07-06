@@ -116,11 +116,9 @@ def sqlPush():
     if request.method == 'POST':
         id = request.form.get('id')
         pwd = request.form.get('pwd')
-        select_sql = "select * from user where uid=" + id + " and password='" + pwd + "'"
-        app.logger.info('execute sql: {}'.format(select_sql))
-        result = db.session.execute(select_sql).fetchall()
-        if result:
-            return redirect(url_for('router.index'))
+        user = account_itf.login('uid', id, pwd)
+        if user['msg'] == 'successfully login!':
+            return redirect(url_for('router.fileDownload'))
     return render_template('sqlPush.html')
 
 
@@ -129,19 +127,15 @@ def fileUpload():
     app.logger.info('GET fileUpload page')
     if request.method == 'POST':
         file = request.files.get('pdf')
-        # 为防护文件上传漏洞而进行文件过滤 判断是否为符合pdf后缀的文件
-        # if file and updownload_tool.allowed_file(file.filename):
-        pdf_name = os.path.splitext(file.filename)[0]
-        suffix = os.path.splitext(file.filename)[1]
-        # 拼接文件名
-        # filename = pdf_name + updownload_tool.rand_str() + '.pdf'
-        filename = pdf_name + updownload_tool.rand_str() + suffix
-        file.save(os.path.join(pdfconfilg.UPLOAD_FOLDER, filename))
-        app.logger.warning('filename: {} has been saved to the server'.format(filename))
-        new_filename = attachment.Attachment(filename=filename)
-        db.session.add(new_filename)
-        db.session.commit()
-        return redirect(url_for('router.fileDownload'))
+        if file and updownload_tool.allowed_file(file.filename):
+            pdf_name = os.path.splitext(file.filename)[0]
+            filename = pdf_name + updownload_tool.rand_str() + '.pdf'
+            file.save(os.path.join(pdfconfilg.UPLOAD_FOLDER, filename))
+            app.logger.warning('filename: {} has been saved to the server'.format(filename))
+            new_filename = attachment.Attachment(filename=filename)
+            db.session.add(new_filename)
+            db.session.commit()
+            return redirect(url_for('router.fileDownload'))
     return render_template('fileUpload.html')
 
 
@@ -155,16 +149,8 @@ def fileDownload():
 @router.route('/download/')
 def download():
     if request.method == 'GET':
-        filepath = request.args['filepath']
-        # 切割出文件名称
-        filename = filepath.split('/')[-1]
-        # 文件路径重命名 -> 去掉文件名 获得路径
-        filepath = filepath.replace(filename, '')
-        app.logger.warning('ready to download file: {}'.format(filepath))
-        return send_from_directory(os.path.join(filepath), filename, as_attachment=True)
-        # 无漏洞的文件下载 后端拼接路径 前端获取文件名
-        # filename = request.args['filename']
-        # return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
+        filename = request.args['filename']
+        return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
 
 
 @router.route('/diaryLoss/')
