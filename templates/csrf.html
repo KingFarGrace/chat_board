@@ -13,6 +13,7 @@
     <div>余额：{{ user['money'] }}</div>
     <form class="csrf" method="POST">
         <!-- 添加csrf_token句即可开启csrf保护 -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="text" placeholder="输入转账用户" name="touser">
         <input type="text" placeholder="输入转账金额" name="money">
         <input type="submit" value="确认">

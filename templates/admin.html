@@ -10,6 +10,7 @@
 
 <form class="csrf" method="post">
     <!-- 添加csrf_token句即可开启csrf保护 -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <label>请输入要删除的用户id</label>
     <input type="text" name="uid">
     <input type="submit" class="btn btn-danger" value="删除用户">

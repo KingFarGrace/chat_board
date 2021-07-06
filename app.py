@@ -1,4 +1,5 @@
 from flask_bootstrap import Bootstrap
+from flask_wtf.csrf import CsrfProtect
 
 from config import dbconfig, pdfconfilg
 # 注释掉该行import语句，即可关闭日志功能
@@ -18,5 +19,5 @@ with app.app_context():
 
 if __name__ == '__main__':
     # csrf保护，所有表单前添加 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> 即可
-    # CsrfProtect(app)
+    CsrfProtect(app)
     app.run(debug=True, port=4500)

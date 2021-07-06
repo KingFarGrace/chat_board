@@ -12,12 +12,14 @@
 <div class='csrf'>
     <form class="csrf" method="get" action="{{ url_for('router.horizon') }}">
         <!-- 添加csrf_token句即可开启csrf保护 -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label>水平越权访问</label>
         <input type="hidden" value="{{ request.cookies.get('username') }}" name="username">
         <input type="submit" value="查看个人信息">
     </form>
     <form class="csrf" method="post" action="{{ url_for('router.vertical') }}">
         <!-- 添加csrf_token句即可开启csrf保护 -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label>垂直越权访问</label>
         <input type="hidden" value="{{ request.cookies.get('username') }}" name="username">
         <input type="submit" value="查看个人信息">

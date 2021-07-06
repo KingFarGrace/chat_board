@@ -21,6 +21,7 @@
 {% if user == None %}
 <form class="loginTable" method="post">
     <!-- 添加csrf_token句即可开启csrf保护 -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" id="public_key" value="{{ public_key }}"/>
     <input type="text" placeholder="输入用户名" name="username" id="usr">
     <input type="password" placeholder="输入密码" name="password" id="pwd">

@@ -9,7 +9,8 @@
 {% block content %}
 {#
 <form id="registerValidate" method="post">
-    添加csrf_token句即可开启csrf保护
+    <!-- 添加csrf_token句即可开启csrf保护 -->
+    {{ form.csrf_token() }}
     {{ form.username.label }} {{ form.username }} <br>
     {{ form.password.label }} {{ form.password }} <br>
     {{ form.repwd.label }} {{ form.repwd }} <br>
@@ -22,6 +23,7 @@
 <div class='csrf'>
     <form id="registerValidator" method="post">
         <!-- 添加csrf_token句即可开启csrf保护 -->
+        {{ form.csrf_token() }}
         <label>username:</label>
         <input type="text" placeholder="请输入要注册的用户名" name="username"><br>
         <label>password:</label>
